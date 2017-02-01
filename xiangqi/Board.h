@@ -10,17 +10,6 @@ class Board
   	bool b_north_check = false;
   	bool b_south_check = false;
   
-  	// reference: https://chessprogramming.wikispaces.com/10x12+Board
-  	// +: north; -: south;
-  	//-1: invalid space
-  	// 0: unoccupied
-  	// 2: pawn
-  	// 3: cannon
-  	// 4: elephant
-  	// 5: horse
-  	// 6: cart
-  	// 7: guards
-  	// 8: general
   	// starting board
     //computer-view of board 14 (L) by 13 (W)
   	int ia_grid[182] = 
@@ -41,23 +30,11 @@ class Board
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  //181
     };
   
-    /* player-view of board (x, y) coordinate system
-        Y
-        6,  5,  4,  7,  8,  7,  4,  5,  6,  
-        0,  0,  0,  0,  0,  0,  0,  0,  0,
-        0,  3,  0,  0,  0,  0,  0,  3,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0,
-        2,  0,  2,  0,  2,  0,  2,  0,  2,
-        0,  0,  0,  0,  0,  0,  0,  0,  0, //riverbank 
-        0,  0,  0,  0,  0,  0,  0,  0,  0, //riverbank
-       -2,  0, -2,  0, -2,  0, -2,  0, -2,
-        0, -3,  0,  0,  0,  0,  0, -3,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0,
-     X -6, -5, -4, -7, -8, -7, -4, -5, -6, X
-        Y
-    */
   
   public:
+
+    //function prototypes
+
   	void play(); 
   	//TODO:
   	//start game

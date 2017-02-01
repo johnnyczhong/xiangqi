@@ -8,7 +8,7 @@
 //
 bool Board::collision_check(int i, int f)
 {
-  bool valid_path = false; //horizontal or vertical movement
+  bool straight_path = false; //horizontal or vertical movement
   bool path_clear = true; //assume path is clear unless checks say otherwise
   int next; //next space for piece
   //move: can only move horizontally or vertically
@@ -21,7 +21,7 @@ bool Board::collision_check(int i, int f)
       next = i + 1;
       for (next; next < f; next++) //check each space from left to right
       {
-        if (ia_grid[i] != 0) 
+        if (ia_grid[next] != 0) 
         {
           path_clear = false; //collided
           break; //break if space is not empty
@@ -33,14 +33,14 @@ bool Board::collision_check(int i, int f)
       next = i - 1;
       for (next; next > f; next--) //reverse check direction
       {
-        if (ia_grid[i] != 0) 
+        if (ia_grid[next] != 0) 
         {
           path_clear = false;
           break;
         }
       }
     }
-    valid_path = true;
+    straight_path = true;
   }
   else if (std::abs(f - i) % 13 == 0) //validate vertical movement
   {
@@ -49,7 +49,7 @@ bool Board::collision_check(int i, int f)
       next = i + 13;
       for (next; next < f; next += 13) //movement downwards is 13 spaces
       {
-        if (ia_grid[i] != 0)
+        if (ia_grid[next] != 0)
         {
           path_clear = false;
           break;
@@ -63,15 +63,15 @@ bool Board::collision_check(int i, int f)
       {
         if (ia_grid[next] != 0)
         {
-          path_clear = false;
+          path_clear = false; 
           break;
         }
       }
     }
-    valid_path = true;
+    straight_path = true;
   }
 
-  return (valid_path && path_clear);
+  return (straight_path && path_clear);
 }
 
 
@@ -83,11 +83,14 @@ bool Board::collision_check(int i, int f)
 //  S: 120, 126
 bool Board::cannon_move(int i, int f)
 {
-  bool valid = false;
-  bool collision = collision_check(i, f);
+  //is the final position an enemy piece?
+  //if so, is there only one piece that separates the cannon
+  //  from the enemy piece?
+  bool attack = false;
+  bool valid_path = collision_check(i, f);
   int cannon = ia_grid[i];
 
-  return (valid || collision);
+  return (attack || valid_path);
 }
 
 
