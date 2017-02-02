@@ -18,14 +18,14 @@
 #define RIGHT 1
 
 //horse movement
-#define UPUP_RIGHT -27
-#define UPUP_LEFT -25
-#define DOWNDOWN_LEFT 25
-#define DOWNDOWN_RIGHT 27
-#define RIGHTRIGHT_DOWN 15
-#define RIGHTRIGHT_UP -11
-#define LEFTLEFT_UP -15
-#define LEFTLEFT_DOWN 11
+// #define UPUP_RIGHT -25
+// #define UPUP_LEFT -27
+// #define DOWNDOWN_LEFT 25
+// #define DOWNDOWN_RIGHT 27
+// #define RIGHTRIGHT_DOWN 15
+// #define RIGHTRIGHT_UP -11
+// #define LEFTLEFT_UP -15
+// #define LEFTLEFT_DOWN 11
 
 //default piece positions
 #define NW_CANNON 55
