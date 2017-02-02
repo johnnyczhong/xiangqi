@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "xiangqi/Board.h"
 #include "xiangqi/Board.cpp"
-#include "xiangqi/Board_Defaults.h"
 
 TEST_CASE( "Make and Remove Pieces", "make_piece remove_piece" )
 {
@@ -149,14 +148,74 @@ TEST_CASE( "Cannon Move or Attack Test", "cannon_move" )
 
 //cart tests significantly simpler
 //due move and attack being the same action
-TEST_CASE( "Cart Move or Attack Test", "cart_move")
+TEST_CASE( "Cart Move or Attack Test", "cart_move" )
 {
 	Board nb;
 
 	nb.make_piece(s_pawn_pos[4] + LEFT, -CART);
 	//attack enemy piece
-	REQUIRE( nb.cart_move(s_pawn_pos[4] + LEFT, NE_CANNON) == true);
-
+	REQUIRE( nb.cart_move(s_pawn_pos[4] + LEFT, NE_CANNON) == true );
+	//fail to attack over obstruction
+	REQUIRE( nb.cart_move(SE_CART, n_pawn_pos[4]) == false );
 }
 
+TEST_CASE( "Horse Movement and Collision", "horse_move" )
+{
+	Board nb;
+	//valid positions are initial + (+/-27, +/-25, +/-11, +/-15)
+	//absolute then relative
 
+	//up, up, left: -25
+	REQUIRE( nb.horse_move(SW_HORSE, SW_CANNON + LEFT) == true );
+	REQUIRE( nb.horse_move(SW_HORSE, SW_HORSE + 2*UP + LEFT) == true );
+	//up, up, right: -27
+	REQUIRE( nb.horse_move(SE_HORSE, SE_CANNON + RIGHT) == true );
+	REQUIRE( nb.horse_move(SE_HORSE, SE_HORSE + 2*UP + RIGHT) == true );
+	//down, down, left: +25
+	REQUIRE( nb.horse_move(NE_HORSE, NE_CANNON + LEFT) == true );
+	REQUIRE( nb.horse_move(NE_HORSE, NE_HORSE + 2*DOWN + LEFT) == true );
+	//down, down, right: +27
+	REQUIRE( nb.horse_move(NW_HORSE, NW_CANNON + RIGHT) == true );
+	REQUIRE( nb.horse_move(NW_HORSE, NW_HORSE + 2*DOWN + RIGHT) == true );
+	
+	//make a dummy horse for these. replace an existing pawn.
+	int test_horse_pos = n_pawn_pos[3];
+	nb.make_piece(test_horse_pos, HORSE);
+
+	//right, right, down: +15
+	REQUIRE( nb.horse_move(test_horse_pos, n_pawn_pos[4] + DOWN) == true );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + DOWN) == true );
+	//right, right, up: -11
+	REQUIRE( nb.horse_move(test_horse_pos, n_pawn_pos[4] + UP) == true );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + UP) == true );
+	//left, left, up: -15
+	REQUIRE( nb.horse_move(test_horse_pos, n_pawn_pos[2] + UP) == true );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*LEFT + UP) == true );
+	//left, left, down: +11
+	REQUIRE( nb.horse_move(test_horse_pos, n_pawn_pos[2] + DOWN) == true );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*LEFT + DOWN) == true );
+
+	//horses follow obstruction on 1st space moved along the long path
+	//  ie. if the horse moves up, up, right the first space up must be empty
+
+	//blocking upward movement
+	nb.make_piece(test_horse_pos + UP, PAWN);
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*UP + RIGHT) == false );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*UP + LEFT) == false );	
+
+	//blocking downward movement
+	nb.make_piece(test_horse_pos + DOWN, PAWN);
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*DOWN + RIGHT) == false );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*DOWN + LEFT) == false );
+
+	//block left movement
+	nb.make_piece(test_horse_pos + LEFT, PAWN);
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*LEFT + UP) == false );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*LEFT + DOWN) == false );
+
+	//block right movement
+	nb.make_piece(test_horse_pos + RIGHT, PAWN);
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + UP) == false );
+	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + DOWN) == false );
+
+}
