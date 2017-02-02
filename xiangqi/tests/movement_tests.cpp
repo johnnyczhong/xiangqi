@@ -265,6 +265,28 @@ TEST_CASE( "Elephant Collision", "elephant_move")
 	nb.remove_piece(NE_ELEPHANT + UP + RIGHT);
 }
 
+TEST_CASE( "Blocking Elephant River Crossing", "elephant_move")
+{
+	Board nb;
+
+	//make elephant, put it in proper locations, 
+	// and put it on a riverbank
+	int ne = n_pawn_pos[1] + LEFT; //north elephant
+	nb.make_piece(ne, ELEPHANT);
+	//attempt to cross river
+	REQUIRE( nb.elephant_move(ne, ne + (2*DOWN + 2*RIGHT)) == false );
+	nb.remove_piece(ne); //clean-up
+
+	int se = s_pawn_pos[1] + LEFT;
+	nb.make_piece(se, -ELEPHANT);
+	REQUIRE( nb.elephant_move(se, se + (2*UP + 2*RIGHT)) == false );
+	nb.remove_piece(se);
+}
+
+
+
+
+
 
 
 
