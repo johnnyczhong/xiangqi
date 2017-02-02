@@ -1,5 +1,6 @@
 //Board_Defaults.h
 
+//piece list
 #define UNOCCUPIED 0
 #define INVALID -1
 #define PAWN 2
@@ -10,11 +11,23 @@
 #define GUARD 7
 #define GENERAL 8
 
+//directions
 #define UP -13
 #define DOWN 13
 #define LEFT -1
 #define RIGHT 1
 
+//horse movement
+#define UPUP_RIGHT -27
+#define UPUP_LEFT -25
+#define DOWNDOWN_LEFT 25
+#define DOWNDOWN_RIGHT 27
+#define RIGHTRIGHT_DOWN 15
+#define RIGHTRIGHT_UP -11
+#define LEFTLEFT_UP -15
+#define LEFTLEFT_DOWN 11
+
+//default piece positions
 #define NW_CANNON 55
 #define NE_CANNON 61
 #define SW_CANNON 120
