@@ -5,6 +5,36 @@
 #include "Board.h"
 #include "Board_Defaults.h"
 
+//purpose: validate elephant movement
+//returns bool representing valid/invalid movement
+bool Board::elephant_move(int i, int f)
+{
+  int movement = f - i;
+  bool valid = false;
+  //up-right
+  if (movement == (2*UP + 2*RIGHT))
+  {
+    valid = true;
+  }
+  //up-left
+  else if (movement == (2*UP + 2*LEFT))
+  {
+    valid = true;
+  }
+  //down-right
+  else if (movement == (2*DOWN + 2*RIGHT))
+  {
+    valid = true;
+  }
+  //down-left
+  else if (movement == (2*DOWN + 2*LEFT))
+  {
+    valid = true;
+  }
+
+  return valid;
+}
+
 //purpose: validate horse movement.
 //returns bool representing valid/invalid movement
 bool Board::horse_move(int i, int f)
