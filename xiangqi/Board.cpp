@@ -12,22 +12,22 @@ bool Board::horse_move(int i, int f)
   int movement = f - i;
   bool valid = false;
   //up
-  if (movement == UPUP_RIGHT || movement == UPUP_LEFT)
+  if (movement == (2*UP + RIGHT) || movement == (2*UP + LEFT))
   {
     valid = (ia_grid[i + UP] == 0);
   }
   //down
-  else if (movement == DOWNDOWN_LEFT || movement == DOWNDOWN_RIGHT)
+  else if (movement == (2*DOWN + LEFT) || movement == (2*DOWN + RIGHT))
   {
     valid = (ia_grid[i + DOWN] == 0);
   }
   //left
-  else if (movement == LEFTLEFT_UP || movement == LEFTLEFT_DOWN)
+  else if (movement == (2*LEFT + UP) || movement == (2*LEFT + DOWN))
   {
     valid = (ia_grid[i + LEFT] == 0);
   }
   //right
-  else if (movement == RIGHTRIGHT_UP || movement == RIGHTRIGHT_DOWN)
+  else if (movement == (2*RIGHT + UP)|| movement == (2*RIGHT + DOWN))
   {
     valid = (ia_grid[i + RIGHT] == 0);
   }

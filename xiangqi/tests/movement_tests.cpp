@@ -217,5 +217,31 @@ TEST_CASE( "Horse Movement and Collision", "horse_move" )
 	nb.make_piece(test_horse_pos + RIGHT, PAWN);
 	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + UP) == false );
 	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + DOWN) == false );
-
 }
+
+TEST_CASE( "Elephant Movement and Collision", "elephant_move" )
+{
+	Board nb;
+
+	//elephants only move 2 spaces diagonally
+	//4 directions, upleft, upright, downleft, downright
+	//cannot cross river
+	//both elephants have 7 possible positions
+
+	//2 down, 2 right
+	REQUIRE( nb.elephant_move(NE_ELEPHANT, NE_ELEPHANT + (2*DOWN + 2*RIGHT)) == true );
+	//2 down, 2 left
+	REQUIRE( nb.elephant_move(NE_ELEPHANT, NE_ELEPHANT + (2*DOWN + 2*LEFT)) == true );
+	//2 up, 2 left
+	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2* LEFT)) == true );
+	//2 up, 2 right
+	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2*RIGHT)) == true );
+}
+
+
+
+
+
+
+
+
