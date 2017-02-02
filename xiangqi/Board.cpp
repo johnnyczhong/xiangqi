@@ -4,12 +4,19 @@
 #include <iostream>
 #include "Board.h"
 
-//purpose: check for unit collision for cannons/carts
-//
-bool Board::collision_check(int i, int f)
+//purpose: check for valid movement by cart
+//returns: bool representing valid/invalid move
+bool Board::cart_move(int i, int f)
 {
-  bool straight_path = false; //horizontal or vertical movement
-  bool path_clear = true; //assume path is clear unless checks say otherwise
+  return straight_collision_check(i, f);
+}
+
+//purpose: check for unit collision for cannons/carts
+//returns: the index where there has been a collision or 0
+int Board::straight_collision_check(int i, int f)
+{
+  int straight_path = false; //horizontal or vertical movement
+  int collision = 0; //assume path is clear unless checks say otherwise
   int next; //next space for piece
   //move: can only move horizontally or vertically
   //each space moved through must be empty
@@ -23,7 +30,7 @@ bool Board::collision_check(int i, int f)
       {
         if (ia_grid[next] != 0) 
         {
-          path_clear = false; //collided
+          collision = next; //collided
           break; //break if space is not empty
         }
       }
@@ -35,7 +42,7 @@ bool Board::collision_check(int i, int f)
       {
         if (ia_grid[next] != 0) 
         {
-          path_clear = false;
+          collision = next; //collided
           break;
         }
       }
@@ -51,7 +58,7 @@ bool Board::collision_check(int i, int f)
       {
         if (ia_grid[next] != 0)
         {
-          path_clear = false;
+          collision = next;
           break;
         }
       }
@@ -63,7 +70,7 @@ bool Board::collision_check(int i, int f)
       {
         if (ia_grid[next] != 0)
         {
-          path_clear = false; 
+          collision = next; 
           break;
         }
       }
@@ -71,26 +78,38 @@ bool Board::collision_check(int i, int f)
     straight_path = true;
   }
 
-  return (straight_path && path_clear);
+  //indicate that path is not straight
+  if (!straight_path)
+  {
+    collision = -1;
+  }
+
+  return collision;
 }
 
-
 //purpose: evaluate cannon movement
-//cannons move like rooks/carts
-//  but attack by leapfrogging over another piece
-//initial cannon positions
-//  N: 55, 61
-//  S: 120, 126
+//  cannons move like rooks/carts
+//  determines movement by seeing if there is any
+//    collision between the initial and final position
+//    and that the final position is empty.
+//  determines attack by seeing if there is
+//    only 1 piece between the initial and final position
+//    and that the final position is occupied by another piece
+//returns: true for valid move, false for invalid move
 bool Board::cannon_move(int i, int f)
 {
-  //is the final position an enemy piece?
-  //if so, is there only one piece that separates the cannon
-  //  from the enemy piece?
-  bool attack = false;
-  bool valid_path = collision_check(i, f);
-  int cannon = ia_grid[i];
 
-  return (attack || valid_path);
+  int collided = straight_collision_check(i, f);
+  int rev_collided = straight_collision_check(f, i);
+  bool move = ((collided == 0) && (ia_grid[f] == 0));
+
+  bool attack = false;
+  if ((ia_grid[f] != 0) && (collided > 0))
+  {
+    attack = (collided == rev_collided);
+  }
+
+  return (attack || move); //attacking or moving
 }
 
 
@@ -98,10 +117,7 @@ bool Board::cannon_move(int i, int f)
 //pawns only move forward
 //if the pawn has crossed the river, 
 //  they can move left and right
-//initial pawn positions:
-//N: 67, 69, 71, 73, 75
-//S: 114, 112, 110, 108, 106
-
+//returns: true if valid move, false if invalid
 bool Board::pawn_move(int i, int f)
 {
   bool valid = false;
@@ -130,8 +146,19 @@ bool Board::pawn_move(int i, int f)
 
 }
 
-//make/delete new pieces for testing
+//make new pieces for testing
 void Board::make_piece(int pos, int piece)
 {
   ia_grid[pos] = piece;
+}
+
+//remove piece from board
+void Board::remove_piece(int pos)
+{
+  ia_grid[pos] = 0;
+}
+
+int Board::check_pos(int pos)
+{
+  return ia_grid[pos];
 }

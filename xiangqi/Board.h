@@ -60,7 +60,8 @@ class Board
   	int eval_move(int, int); 
   
     //check unit collision for cannons and carts
-    bool collision_check(int, int);
+    int straight_collision_check(int, int);
+    //int collision_helper(int);
 
     //check inhibited movement on horses and elephants
     bool inhibited_movement_check(int, int);
@@ -81,6 +82,8 @@ class Board
   	void determine_check(); 
 
     void make_piece(int, int); //piece id, position
+    void remove_piece(int); //position
+    int check_pos(int); //returns piece at given position
 };
 
 #endif

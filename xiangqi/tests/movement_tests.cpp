@@ -15,7 +15,6 @@ TEST_CASE( "Make and Remove Pieces", "make_piece remove_piece" )
 	//remove piece, confirm
 	nb.remove_piece(new_piece_pos);
 	REQUIRE( (nb.check_pos(new_piece_pos) == UNOCCUPIED) == true);
-
 }
 
 
@@ -60,7 +59,6 @@ TEST_CASE( "Pawn Movement Test", "pawn_move" )
   //remove pawns
   nb.remove_piece(new_np_pos);
   nb.remove_piece(new_sp_pos);
-
 }
 
 
@@ -95,31 +93,25 @@ TEST_CASE( "Collision Check Test", "straight_collision_check" )
 	REQUIRE( (nb.straight_collision_check(NW_CANNON, NE_CANNON + RIGHT) == NE_CANNON) == true );
 	//attempt to move past another piece, left
 	REQUIRE( (nb.straight_collision_check(NE_CANNON, NW_CANNON + LEFT) == NW_CANNON) == true );
-
 }
 
 TEST_CASE( "Cannon Move or Attack Test", "cannon_move" )
 {
 	Board nb;
 
-	/*
-	=== Passing Tests ===
-	*/
-
-	//move left
+	// === Passing Movement Tests ===
+	
+	//a bit redundant due to same tests in collision
 	REQUIRE( nb.cannon_move(NE_CANNON, NE_CANNON + 5*LEFT) == true );
-	//move right
 	REQUIRE( nb.cannon_move(NW_CANNON, NW_CANNON + 5*RIGHT) == true );
-	//move up
 	REQUIRE( nb.cannon_move(SE_CANNON, SE_CANNON + 4*UP) == true );
-	//move down
 	REQUIRE( nb.cannon_move(NW_CANNON, NW_CANNON + 4*DOWN) == true );
 
 	//make dummy cannon in between enemy pawns 3 and 4
 	int dummy_cannon_pos = 72;
 	nb.make_piece(dummy_cannon_pos, -CANNON);
 
-	//=== ATTACKS ===
+	// === Passing Attacking Tests ===
 
 	//attack enemy piece left
 	REQUIRE( nb.cannon_move(dummy_cannon_pos, n_pawn_pos[1]) == true );
@@ -134,27 +126,16 @@ TEST_CASE( "Cannon Move or Attack Test", "cannon_move" )
 	//attack enemy piece down
 	REQUIRE( nb.cannon_move(NE_CANNON, SE_HORSE) == true );
 
-	/*
-	=== Failing Tests ===
-	*/
-
-	//move diagonally up-left
-	REQUIRE( nb.cannon_move(SE_CANNON, (SE_CANNON + 4*LEFT + 2*UP)) == false );
-
-	//move diagonally up-right
-	REQUIRE( nb.cannon_move(SE_CANNON, (SE_CANNON + 3*UP + RIGHT)) == false );
-
-	//move diagonally down-left
-	REQUIRE( nb.cannon_move(NE_CANNON, (NE_CANNON + 3*DOWN + LEFT)) == false );
 	
-	//move diagonally down-right
+	// === Failing Movement Tests ===
+
+	//a bit redundant, but just keep since it's already written
+	REQUIRE( nb.cannon_move(SE_CANNON, (SE_CANNON + 4*LEFT + 2*UP)) == false );
+	REQUIRE( nb.cannon_move(SE_CANNON, (SE_CANNON + 3*UP + RIGHT)) == false );
+	REQUIRE( nb.cannon_move(NE_CANNON, (NE_CANNON + 3*DOWN + LEFT)) == false );
 	REQUIRE( nb.cannon_move(NE_CANNON, (NE_CANNON + 3*DOWN + RIGHT)) == false );
 
-	int new_s_cannon_pos = SE_CANNON + UP; 
-	nb.make_piece(new_s_cannon_pos, -CANNON);
-	//attack ally
-	REQUIRE( nb.cannon_move(new_s_cannon_pos, s_pawn_pos[2]) == false );
-	nb.remove_piece(new_s_cannon_pos);
+	// === Failing Attack Tests ===
 
 	//attack enemy without leapfrogging
 	REQUIRE( nb.cannon_move(SW_CANNON, NW_CANNON) == false );
@@ -165,3 +146,17 @@ TEST_CASE( "Cannon Move or Attack Test", "cannon_move" )
 	//attack diagonally
 	REQUIRE( nb.cannon_move(SE_CANNON, n_pawn_pos[4]) == false );
 }
+
+//cart tests significantly simpler
+//due move and attack being the same action
+TEST_CASE( "Cart Move or Attack Test", "cart_move")
+{
+	Board nb;
+
+	nb.make_piece(s_pawn_pos[4] + LEFT, -CART);
+	//attack enemy piece
+	REQUIRE( nb.cart_move(s_pawn_pos[4] + LEFT, NE_CANNON) == true);
+
+}
+
+
