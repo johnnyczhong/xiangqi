@@ -3,12 +3,49 @@
 #include <cmath>
 #include <iostream>
 #include "Board.h"
+#include "Board_Defaults.h"
 
-//purpose: check for valid movement by cart
+//purpose: validate horse movement.
+//returns bool representing valid/invalid movement
+bool Board::horse_move(int i, int f)
+{
+  int movement = f - i;
+  bool valid = false;
+  //up
+  if (movement == UPUP_RIGHT || movement == UPUP_LEFT)
+  {
+    valid = (ia_grid[i + UP] == 0);
+  }
+  //down
+  else if (movement == DOWNDOWN_LEFT || movement == DOWNDOWN_RIGHT)
+  {
+    valid = (ia_grid[i + DOWN] == 0);
+  }
+  //left
+  else if (movement == LEFTLEFT_UP || movement == LEFTLEFT_DOWN)
+  {
+    valid = (ia_grid[i + LEFT] == 0);
+  }
+  //right
+  else if (movement == RIGHTRIGHT_UP || movement == RIGHTRIGHT_DOWN)
+  {
+    valid = (ia_grid[i + RIGHT] == 0);
+  }
+
+  return valid;
+}
+
+//purpose: check for straight line, unobstructed movement
+//  or attack
 //returns: bool representing valid/invalid move
 bool Board::cart_move(int i, int f)
 {
-  return straight_collision_check(i, f);
+  bool valid = false;
+  if (straight_collision_check(i, f) == 0)
+  {
+    valid = true;
+  }
+  return valid;
 }
 
 //purpose: check for unit collision for cannons/carts
