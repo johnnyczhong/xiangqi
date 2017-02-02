@@ -219,7 +219,7 @@ TEST_CASE( "Horse Movement and Collision", "horse_move" )
 	REQUIRE( nb.horse_move(test_horse_pos, test_horse_pos + 2*RIGHT + DOWN) == false );
 }
 
-TEST_CASE( "Elephant Movement and Collision", "elephant_move" )
+TEST_CASE( "Elephant Movement", "elephant_move" )
 {
 	Board nb;
 
@@ -236,6 +236,33 @@ TEST_CASE( "Elephant Movement and Collision", "elephant_move" )
 	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2* LEFT)) == true );
 	//2 up, 2 right
 	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2*RIGHT)) == true );
+}
+
+TEST_CASE( "Elephant Collision", "elephant_move")
+{
+	Board nb;
+	//blocking with a piece in the middle
+	//make a piece, then test, then delete intervening piece
+
+	//2 down, 2 right
+	nb.make_piece(NE_ELEPHANT + DOWN + RIGHT, PAWN);
+	REQUIRE( nb.elephant_move(NE_ELEPHANT, NE_ELEPHANT + (2*DOWN + 2*RIGHT)) == false );
+	nb.remove_piece(NE_ELEPHANT + DOWN + RIGHT);
+
+	//2 down, 2 left
+	nb.make_piece(NE_ELEPHANT + DOWN + LEFT, PAWN);
+	REQUIRE( nb.elephant_move(NE_ELEPHANT, NE_ELEPHANT + (2*DOWN + 2*LEFT)) == false );
+	nb.remove_piece(NE_ELEPHANT + DOWN + LEFT);
+
+	//2 up, 2 left
+	nb.make_piece(SE_ELEPHANT + UP + LEFT, PAWN);
+	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2* LEFT)) == false );
+	nb.remove_piece(NE_ELEPHANT + UP + LEFT);
+
+	//2 up, 2 right
+	nb.make_piece(SE_ELEPHANT + UP + RIGHT, PAWN);
+	REQUIRE( nb.elephant_move(SE_ELEPHANT, SE_ELEPHANT + (2*UP + 2*RIGHT)) == false );
+	nb.remove_piece(NE_ELEPHANT + UP + RIGHT);
 }
 
 
