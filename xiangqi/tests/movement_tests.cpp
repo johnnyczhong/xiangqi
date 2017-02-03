@@ -350,6 +350,38 @@ TEST_CASE( "Guard Constricted Movement Tests", "guard_move" )
 	//block exit
 	REQUIRE( nb.guard_move(top_right_guard, top_right_guard + UP + RIGHT) == false );
 	REQUIRE( nb.guard_move(top_left_guard, top_left_guard + UP + LEFT) == false );
+
+	// GUARDS CAN'T FLY TO THE OTHER ENCAMPMENT!
+	REQUIRE( nb.guard_move(SE_GUARD, NE_GUARD + DOWN) == false );
+}
+
+TEST_CASE( "General Movement Tests", "general_move" )
+{
+	// generals can only move 1 square: up, down, left, or right
+	// they can only stay within their encampment, like guards
+
+	Board nb;
+
+	//move a general into the middle empty space
+	int general_pos = N_GENERAL + DOWN;
+	nb.make_piece(general_pos, GENERAL);
+	nb.remove_piece(N_GENERAL);
+
+	REQUIRE( nb.general_move(general_pos, general_pos + UP) == true );
+	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == true );
+	REQUIRE( nb.general_move(general_pos, general_pos + RIGHT) == true );
+	REQUIRE( nb.general_move(general_pos, general_pos + LEFT) == true );
+
+	//move more than 1 space
+	REQUIRE( nb.general_move(general_pos, general_pos + 2*UP) == false );
+	REQUIRE( nb.general_move(general_pos, general_pos + 2*LEFT) == false );
+
+	//move the general down another space
+	//move out of encampment box
+	nb.remove_piece(general_pos);
+	general_pos += DOWN;
+	nb.make_piece(general_pos + DOWN, GENERAL);
+	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false );
 }
 
 
