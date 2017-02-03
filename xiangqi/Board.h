@@ -56,8 +56,9 @@ class Board
     	
   	//args: initial and final position of piece 
     //pieces cannot occupy the same position as an allied piece
-  	//return: -1 if invalid inputs, 0 if valid and move is performed
-  	int eval_move(int, int); 
+    //pieces cannot move off the board (into -1 territory)
+  	//return: false if illegal move, true if valid
+  	bool eval_move(int, int); 
   
     //check unit collision for cannons and carts
     int straight_collision_check(int, int);
@@ -79,7 +80,7 @@ class Board
 
   	//call from eval_move if general is threatened
   	//flips north_check or south_check from false to true and vice versa
-  	void determine_check(); 
+  	void determine_check_status(); 
 
     void make_piece(int, int); //piece id, position
     void remove_piece(int); //position

@@ -5,6 +5,29 @@
 #include "Board.h"
 #include "Board_Defaults.h"
 
+bool Board::general_move(int i, int f)
+{
+  int movement = f - i;
+  int general = ia_grid[i];
+  bool in_boundary = false;
+  bool valid = 
+  (
+    (movement == UP) || (movement == DOWN) ||
+    (movement == RIGHT) || (movement == LEFT)
+  );
+
+  if (general > 0)
+  {
+    in_boundary = n_camp_box_check(f);
+  }
+  else
+  {
+    in_boundary = s_camp_box_check(f);
+  }
+
+  return (in_boundary && valid);
+}
+
 bool Board::guard_move(int i, int f)
 {
   int movement = f - i;
