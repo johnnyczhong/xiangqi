@@ -9,6 +9,8 @@ class Board
   	bool b_north_turn = true; //north starts first
   	bool b_north_check = false;
   	bool b_south_check = false;
+    int i_north_general_pos = N_GENERAL;
+    int i_south_general_pos = S_GENERAL;
   
   	// starting board
     //computer-view of board 14 (L) by 13 (W)
@@ -51,21 +53,16 @@ class Board
   	//next player turn
     
   	int determine_position(int, int); //given set of x, y find corresponding array position
-
-  	int determine_piece(int); //what piece is being moved?
     	
   	//args: initial and final position of piece 
     //pieces cannot occupy the same position as an allied piece
     //pieces cannot move off the board (into -1 territory)
   	//return: false if illegal move, true if valid
   	bool eval_move(int, int); 
-  
+    bool eval_dest(int, int);
+
     //check unit collision for cannons and carts
     int straight_collision_check(int, int);
-    //int collision_helper(int);
-
-    //check inhibited movement on horses and elephants
-    bool inhibited_movement_check(int, int);
 
     //helper functions per different piece (should check rules of a particular piece)
   	//args: initial position, final position
@@ -80,10 +77,13 @@ class Board
 
   	//call from eval_move if general is threatened
   	//flips north_check or south_check from false to true and vice versa
-  	void determine_check_status(); 
+  	void get_in_check(); 
 
-    void make_piece(int, int); //piece id, position
+    void make_piece(int, int); //position, piece id
     void remove_piece(int); //position
+    void update_general_pos(int);
+    int get_general_position(int);
+
     int check_pos(int); //returns piece at given position
     bool n_camp_box_check(int); //given a position, determines if it's in the box
     bool s_camp_box_check(int); 

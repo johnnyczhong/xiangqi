@@ -5,21 +5,51 @@
 #include "Board.h"
 #include "Board_Defaults.h"
 
+int get_general_pos(int side)
+{
+  if (side > 0) //north
+  {
+    return i_north_general_pos;
+  }
+  else //south
+  {
+    return i_south_general_pos;
+  }
+}
+
+void Board::update_general_pos(int pos)
+{
+  if (b_north_turn) //north
+  {
+    i_north_general_pos = pos;
+  }
+  else if (!b_north_turn) //south
+  {
+    i_south_general_pos = pos;
+  }
+}
+
+bool Board::eval_dest(int i, int f)
+{
+  bool valid;
+  if (piece > 0) //north
+  {
+    //extra check here because -1 is an invalid space
+    valid = (ia_grid[f] <= 0) && (ia_grid[f] != -1);
+  }
+  else
+  {
+    valid = (ia_grid[f] >= 0);
+  }
+  return valid;
+}
+
 bool Board::eval_move(int i, int f)
 {
   //see if piece collides with allied piece
   // or leaves board
   int piece = ia_grid[i];
-  bool valid_dest;
-  if (piece > 0) //north
-  {
-    //extra check here because -1 is an invalid space
-    valid_dest = (ia_grid[f] <= 0) && (ia_grid[f] != -1);
-  }
-  else
-  {
-    valid_dest = (ia_grid[f] >= 0);
-  }
+  bool valid_dest = eval_dest(i, f);
 
   //determine what the piece is 
   //and determine if the move is valid
