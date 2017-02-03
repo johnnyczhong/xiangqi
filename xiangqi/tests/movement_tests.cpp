@@ -310,7 +310,6 @@ TEST_CASE( "Guard Diagonal Movement", "guard_move" )
 	REQUIRE( nb.guard_move(new_guard, new_guard + DOWN) == false );
 	REQUIRE( nb.guard_move(new_guard, new_guard + RIGHT) == false );
 	REQUIRE( nb.guard_move(new_guard, new_guard + LEFT) == false );
-
 }
 
 TEST_CASE( "Camp Boundaries Check", "n_camp_box_check and s_camp_box_check")
@@ -328,7 +327,6 @@ TEST_CASE( "Camp Boundaries Check", "n_camp_box_check and s_camp_box_check")
 	//check if functions confirm that the positions given are invalid
 	REQUIRE( nb.s_camp_box_check(S_GENERAL + 3*UP) == false );
 	REQUIRE( nb.s_camp_box_check(SE_GUARD + RIGHT) == false );
-
 }
 
 TEST_CASE( "Guard Constricted Movement Tests", "guard_move" )
@@ -383,13 +381,42 @@ TEST_CASE( "General Movement Tests", "general_move" )
 	nb.make_piece(general_pos, GENERAL); //spawn at the border
 	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false ); //attempt to move out
 
-  //generals cannot have an unbostructed path towards each other
+  // === GENERALS CANNOT CHECK THEMSELVES START ===
 
+  //generals cannot have an unbostructed path towards each other
   //make enemy general in a threat position to the right
   nb.make_piece(S_GENERAL + UP + RIGHT, -GENERAL);
 
   //attempt move general to the right
   REQUIRE( nb.general_move(general_pos, general_pos + RIGHT) == false );
+
+  //remove threatening enemy general
+  nb.remove_piece(S_GENERAL + UP + RIGHT);
+
+  //create threat (cart)
+  int ec = general_pos + UP + 3*RIGHT; //enemy cart
+  nb.make_piece(ec, -CART);
+
+  //attempt to move general into threatened position
+  REQUIRE(nb.general_move(general_pos, general_pos + UP) == false );
+
+  //remove threat (cart)
+  nb.remove_piece(ec);
+
+  //create threat (horse) - due to weird mechanics
+  int eh = general_pos + 2*RIGHT;
+  nb.make_piece(eh, -HORSE);
+
+  //attempt to move general into threatened position
+  REQUIRE( nb.general_move(general_pos, general_pos + UP) == false );
+
+  //block threatening horse with allied piece
+  nb.make_piece(eh + LEFT, PAWN);
+
+  //attempt to move general into safe position
+  REQUIRE( nb.general_move(general_pos, general_pos + UP) == true );
+
+  // === GENERALS CANNOT CHECK THEMSELVES FINISH ===
 
 }
 
@@ -492,25 +519,6 @@ TEST_CASE( "Movement Validation", "eval_move" )
 	REQUIRE( nb.eval_move(NE_CANNON, off_map_cannon) == false );
 	//horse attempts to leap off the map
 	REQUIRE( nb.eval_move(NE_HORSE, off_map_horse) == false );
-}
-
-
-TEST_CASE( "Determine General Check Status", "determine_check_status" )
-{
-	//what is a "check"?
-	//where the general of the current player is under threat
-	//and can be killed next turn
-	//see if the last piece moved by the enemy threatens the general
-
-	//ex: N makes move, move puts S's general in check, flip S's check_status
-
-
-
-	//if a player makes a move that would put 
-	//  their general under "check"
-	//  that would be an invalid move
-
-	//general to general face-off
 }
 
 
