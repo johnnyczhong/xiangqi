@@ -1,5 +1,7 @@
 //board.h
 //header file
+#include "Board_Defaults.h"
+
 #ifndef BOARD_H
 #define BOARD_H
 
@@ -83,7 +85,8 @@ class Board
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position
     void update_general_pos(int);
-    int get_general_position(int);
+    void flip_turn(); //change turn from N to S and vice versa
+    int get_general_pos(int);
 
     int check_pos(int); //returns piece at given position
     bool n_camp_box_check(int); //given a position, determines if it's in the box

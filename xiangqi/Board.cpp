@@ -3,9 +3,22 @@
 #include <cmath>
 #include <iostream>
 #include "Board.h"
-#include "Board_Defaults.h"
 
-int get_general_pos(int side)
+#define DEBUG 1
+
+void Board::flip_turn()
+{
+  if (b_north_turn)
+  {
+    b_north_turn = false;
+  }
+  else
+  {
+    b_north_turn = true;
+  }
+}
+
+int Board::get_general_pos(int side)
 {
   if (side > 0) //north
   {
@@ -32,7 +45,7 @@ void Board::update_general_pos(int pos)
 bool Board::eval_dest(int i, int f)
 {
   bool valid;
-  if (piece > 0) //north
+  if (ia_grid[i] > 0) //north
   {
     //extra check here because -1 is an invalid space
     valid = (ia_grid[f] <= 0) && (ia_grid[f] != -1);
@@ -100,7 +113,6 @@ bool Board::general_move(int i, int f)
   return (in_boundary && valid && not_gvg);
 }
 
-
 //determines if the position the general
 //is moving to will initiate a "check" status
 bool Board::obstructed_generals(int f)
@@ -108,14 +120,18 @@ bool Board::obstructed_generals(int f)
   int e_pos;
   if (b_north_turn) //north's turn
   {
-    e_pos = get_general_pos(-1);
+    e_pos = get_general_pos(-1); //get south general position
   }
   else
   {
     e_pos = get_general_pos(1);
   }
 
-  return !(straight_collision_check(f, e_pos));
+  //if there is a collision (before hitting the other general)
+  //or if the path is not straight, return true
+  int collision = straight_collision_check(f, e_pos);
+  std::cout << "f, e_pos: " << f << " " << e_pos << std::endl;
+  return (collision != 0);
 }
 
 bool Board::guard_move(int i, int f)
