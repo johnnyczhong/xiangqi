@@ -382,6 +382,93 @@ TEST_CASE( "General Movement Tests", "general_move" )
 	general_pos += DOWN;
 	nb.make_piece(general_pos + DOWN, GENERAL);
 	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false );
+
+  //generals cannot have an unbostructed path towards each other
+
+}
+
+TEST_CASE( "General Check Status", "determine_threat" )
+{
+  Board nb;
+
+  //after every move, pretend that the general is every offensive piece
+  //  ie. pawn, horse, cart, cannon
+  //then make mock attacks against those spaces and determine 
+  //if there is that piece is at the destination
+  //except horses. horses have a blocking mechanic that only works one way.
+  //  make an unobstructed mock attack in all directions
+  //  if there's a horse there, then determine if the horse could make a valid attack
+
+  //north, starting positions
+  REQUIRE( nb.get_in_check() == false );
+
+  //move general forward/down 1 space
+  int n = nb.get_general_pos(1);
+  nb.make_piece(n + DOWN, GENERAL);
+  nb.remove_piece(n);
+  nb.update_general_pos(n + DOWN);
+  REQUIRE( nb.get_in_check() == false );
+
+  // === BEGIN CART TEST ===
+
+  //spawn enemy cart/rook left-horizontal of the general's position
+  n = nb.get_general_pos(1);
+  nb.make_piece(n + 3*LEFT, -CART);
+  REQUIRE( nb.get_in_check() == true );
+  //remove cart
+  nb.remove_piece(n + 3*LEFT);
+
+  //recheck check status
+  REQUIRE( nb.get_in_check() == false );
+
+  // === END CART TEST ===
+
+
+  // === BEGIN CANNON TEST ===
+
+  //spawn enemy cannon in front of central pawn
+  nb.make_piece(n_pawn_pos[2] + DOWN, -CANNON);
+  REQUIRE( nb.get_in_check() == true );
+  nb.remove_piece(n_pawn_pos[2] + DOWN);
+
+  //recheck check status
+  REQUIRE( nb.get_in_check() == false );
+
+  // === END CANNON TEST === 
+
+  // === START HORSE TEST ===
+
+  //spawn enemy horse in threat position
+  int h = n + 2*LEFT + DOWN;
+  nb.make_piece(h, -HORSE);
+  REQUIRE( nb.get_in_check() == true );
+
+  //block enemy horse with allied pawn
+  int p = h + RIGHT;
+  nb.make_piece(p, PAWN);
+  REQUIRE( nb.get_in_check() == false );
+
+  //remove allied pawn and enemy horse
+  nb.remove_piece(h);
+  nb.remove_piece(p);
+
+  //recheck check status
+  REQUIRE( nb.get_in_check() == false);
+
+  // === END HORSE TEST ===
+
+  // === START PAWN TEST ===
+
+  //spawn enemy pawn in threat position
+  int ep = n + RIGHT;
+  nb.make_piece(ep, -PAWN);
+  REQUIRE( nb.get_in_check() == true );
+
+  //remove enemy pawn, recheck
+  nb.remove_piece(ep);
+  REQUIRE( nb.get_in_check() == false );
+
+  // === END PAWN TEST ===
 }
 
 TEST_CASE( "Movement Validation", "eval_move" )
@@ -399,10 +486,27 @@ TEST_CASE( "Movement Validation", "eval_move" )
 	REQUIRE( nb.eval_move(NE_CANNON, off_map_cannon) == false );
 	//horse attempts to leap off the map
 	REQUIRE( nb.eval_move(NE_HORSE, off_map_horse) == false );
+
 }
 
 
+TEST_CASE( "Determine General Check Status", "determine_check_status" )
+{
+	//what is a "check"?
+	//where the general of the current player is under threat
+	//and can be killed next turn
+	//see if the last piece moved by the enemy threatens the general
 
+	//ex: N makes move, move puts S's general in check, flip S's check_status
+
+
+
+	//if a player makes a move that would put 
+	//  their general under "check"
+	//  that would be an invalid move
+
+	//general to general face-off
+}
 
 
 
