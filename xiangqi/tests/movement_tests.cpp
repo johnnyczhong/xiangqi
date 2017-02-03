@@ -379,11 +379,17 @@ TEST_CASE( "General Movement Tests", "general_move" )
 	//move the general down another space
 	//move out of encampment box
 	nb.remove_piece(general_pos);
-	general_pos += DOWN;
-	nb.make_piece(general_pos + DOWN, GENERAL);
-	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false );
+	general_pos += DOWN; //down 1 more space
+	nb.make_piece(general_pos, GENERAL); //spawn at the border
+	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false ); //attempt to move out
 
   //generals cannot have an unbostructed path towards each other
+
+  //make enemy general in a threat position to the right
+  nb.make_piece(S_GENERAL + UP + RIGHT, -GENERAL);
+
+  //attempt move general to the right
+  REQUIRE( nb.general_move(general_pos, general_pos + RIGHT) == false );
 
 }
 
@@ -486,7 +492,6 @@ TEST_CASE( "Movement Validation", "eval_move" )
 	REQUIRE( nb.eval_move(NE_CANNON, off_map_cannon) == false );
 	//horse attempts to leap off the map
 	REQUIRE( nb.eval_move(NE_HORSE, off_map_horse) == false );
-
 }
 
 
