@@ -84,6 +84,8 @@ class Board
     void make_piece(int, int); //piece id, position
     void remove_piece(int); //position
     int check_pos(int); //returns piece at given position
+    bool n_camp_box_check(int); //given a position, determines if it's in the box
+    bool s_camp_box_check(int); 
 };
 
 #endif

@@ -5,33 +5,79 @@
 #include "Board.h"
 #include "Board_Defaults.h"
 
+bool Board::guard_move(int i, int f)
+{
+  int movement = f - i;
+  int guard = ia_grid[i];
+  bool in_boundary = false;
+  //movement allowed: up-right, up-left, down-right, down-left
+  bool valid = 
+  (
+    (movement == UP + RIGHT) || (movement == UP + LEFT) ||
+    (movement == DOWN + RIGHT) || (movement == DOWN + LEFT)
+  );
+
+  if (guard > 0) //north guard
+  {
+    in_boundary = n_camp_box_check(f);
+  }
+  else //south guard
+  {
+    in_boundary = s_camp_box_check(f);
+  }
+
+  return (in_boundary && valid);
+}
+
+bool Board::n_camp_box_check(int f)
+{
+  bool first_row = (f >= NW_GUARD && f <= NE_GUARD);
+  bool second_row = (f >= (NW_GUARD + DOWN) && f <= (NE_GUARD + DOWN));
+  bool third_row = (f >= (NW_GUARD + 2*DOWN) && f <= (NE_GUARD + 2*DOWN));
+  return (first_row || second_row || third_row);
+}
+
+bool Board::s_camp_box_check(int f)
+{
+  bool first_row = (f >= SW_GUARD && f <= SE_GUARD);
+  bool second_row = (f >= (SW_GUARD + UP) && f <= (SE_GUARD + UP));
+  bool third_row = (f >= (SW_GUARD + 2*UP) && f <= (SE_GUARD + 2*UP));
+  return (first_row || second_row || third_row);
+}
+
+
 //purpose: validate elephant movement
 //returns bool representing valid/invalid movement
 bool Board::elephant_move(int i, int f)
 {
+  int elephant = ia_grid[i]; //identify elephant side
   int movement = f - i;
   bool valid = false;
-  //up-right
-  if (movement == (2*UP + 2*RIGHT))
-  {
-    valid = true;
-  }
-  //up-left
-  else if (movement == (2*UP + 2*LEFT))
-  {
-    valid = true;
-  }
-  //down-right
-  else if (movement == (2*DOWN + 2*RIGHT))
-  {
-    valid = true;
-  }
-  //down-left
-  else if (movement == (2*DOWN + 2*LEFT))
-  {
-    valid = true;
-  }
 
+  //elephant must stay on its own side
+  if ((elephant > 0 && f < 90) || (elephant < 0 && f > 90))
+  {
+    //up-right
+    if (movement == (2*UP + 2*RIGHT))
+    {
+      valid = (ia_grid[i + UP + RIGHT] == 0);
+    }
+    //up-left
+    else if (movement == (2*UP + 2*LEFT))
+    {
+      valid = (ia_grid[i + UP + LEFT] == 0);
+    }
+    //down-right
+    else if (movement == (2*DOWN + 2*RIGHT))
+    {
+      valid = (ia_grid[i + DOWN + RIGHT] == 0);
+    }
+    //down-left
+    else if (movement == (2*DOWN + 2*LEFT))
+    {
+      valid = (ia_grid[i + DOWN + LEFT] == 0);
+    }
+  }
   return valid;
 }
 

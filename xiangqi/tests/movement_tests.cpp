@@ -313,7 +313,25 @@ TEST_CASE( "Guard Diagonal Movement", "guard_move" )
 
 }
 
-TEST_CASE( "Guard Constricted Movement", "guard_move" )
+TEST_CASE( "Camp Boundaries Check", "n_camp_box_check and s_camp_box_check")
+{
+	Board nb;
+
+	// === Successful Tests ===
+	//check if functions confirm that the positions given are valid
+	REQUIRE( nb.n_camp_box_check(NE_GUARD) == true );
+	REQUIRE( nb.n_camp_box_check(N_GENERAL) == true );
+	REQUIRE( nb.n_camp_box_check(NE_GUARD + 2*DOWN) == true );
+	REQUIRE( nb.s_camp_box_check(S_GENERAL + 2*UP) == true);
+
+	// === Failing Tests ===
+	//check if functions confirm that the positions given are invalid
+	REQUIRE( nb.s_camp_box_check(S_GENERAL + 3*UP) == false );
+	REQUIRE( nb.s_camp_box_check(SE_GUARD + RIGHT) == false );
+
+}
+
+TEST_CASE( "Guard Constricted Movement Tests", "guard_move" )
 {
 	Board nb;
 
