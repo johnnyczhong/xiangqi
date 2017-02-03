@@ -5,6 +5,46 @@
 #include "Board.h"
 #include "Board_Defaults.h"
 
+bool Board::eval_move(int i, int f)
+{
+  //see if piece collides with allied piece
+  // or leaves board
+  int piece = ia_grid[i];
+  bool valid_dest;
+  if (piece > 0) //north
+  {
+    //extra check here because -1 is an invalid space
+    valid_dest = (ia_grid[f] <= 0) && (ia_grid[f] != -1);
+  }
+  else
+  {
+    valid_dest = (ia_grid[f] >= 0);
+  }
+
+  //determine what the piece is 
+  //and determine if the move is valid
+  bool valid_path;
+  switch (piece)
+  {
+    case PAWN: valid_path = pawn_move(i, f);
+               break;
+    case CANNON: valid_path = cannon_move(i, f);
+                 break;
+    case CART: valid_path = cart_move(i, f);
+               break;
+    case HORSE: valid_path = horse_move(i, f);
+                break;
+    case ELEPHANT: valid_path = elephant_move(i, f);
+                   break;
+    case GUARD: valid_path = guard_move(i, f);
+                break;
+    case GENERAL: valid_path = general_move(i, f);
+                  break;
+  }
+
+  return (valid_path && valid_dest);
+}
+
 bool Board::general_move(int i, int f)
 {
   int movement = f - i;
