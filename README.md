@@ -1,3 +1,3 @@
-### intro
-Start of Chinese Chess (or XiangQi, which translates to "Elephant Chess")
+# Description
+A Game Engine that plays Chinese Chess (XiangQi)
 
