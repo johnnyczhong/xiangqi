@@ -283,7 +283,56 @@ TEST_CASE( "Blocking Elephant River Crossing", "elephant_move")
 	nb.remove_piece(se);
 }
 
+TEST_CASE( "Guard Diagonal Movement", "guard_move" )
+{
+	Board nb;
 
+	//guards can only move/attack diagonally
+	//  1 space, confined within the box
+	//only have 5 possible positions
+
+	//up-left
+	REQUIRE( nb.guard_move(SE_GUARD, SE_GUARD + UP + LEFT) == true );
+	//up-right
+	REQUIRE( nb.guard_move(SW_GUARD, SW_GUARD + UP + RIGHT) == true );
+	//down-left
+	REQUIRE( nb.guard_move(NE_GUARD, NE_GUARD + DOWN + LEFT) == true );
+	//down-right
+	REQUIRE( nb.guard_move(NW_GUARD, NW_GUARD + DOWN + RIGHT) == true );
+
+	//move up, down, left, right
+	//make guard
+	int new_guard = N_GENERAL + DOWN;
+	nb.make_piece(new_guard, GUARD);
+
+	//these should fail
+	REQUIRE( nb.guard_move(new_guard, new_guard + UP) == false );
+	REQUIRE( nb.guard_move(new_guard, new_guard + DOWN) == false );
+	REQUIRE( nb.guard_move(new_guard, new_guard + RIGHT) == false );
+	REQUIRE( nb.guard_move(new_guard, new_guard + LEFT) == false );
+
+}
+
+TEST_CASE( "Guard Constricted Movement", "guard_move" )
+{
+	Board nb;
+
+	//confine within 3x3 box
+	//check 4 corners of box exit
+	REQUIRE( nb.guard_move(SE_GUARD, SE_GUARD + UP + RIGHT) == false );
+	REQUIRE( nb.guard_move(SW_GUARD, SW_GUARD + UP + LEFT) == false );
+
+	//make guards on the top corners
+	int top_right_guard = SE_GUARD + 2*UP;
+	int top_left_guard = SW_GUARD + 2*UP;
+	nb.make_piece(top_right_guard, GUARD);
+	nb.make_piece(top_left_guard, GUARD);
+
+	//check exit from these corners
+	//block exit
+	REQUIRE( nb.guard_move(top_right_guard, top_right_guard + UP + RIGHT) == false );
+	REQUIRE( nb.guard_move(top_left_guard, top_left_guard + UP + LEFT) == false );
+}
 
 
 
