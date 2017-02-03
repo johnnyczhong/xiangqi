@@ -386,6 +386,7 @@ TEST_CASE( "General Movement Tests", "general_move" )
 
 TEST_CASE( "Movement Validation", "eval_move" )
 {
+	Board nb;
 	//goal here to perform movement checking on all pieces
 	//no piece can occupy the same space as an allied piece
 	REQUIRE( nb.eval_move(NE_CART, NE_HORSE) == false );
@@ -398,7 +399,6 @@ TEST_CASE( "Movement Validation", "eval_move" )
 	REQUIRE( nb.eval_move(NE_CANNON, off_map_cannon) == false );
 	//horse attempts to leap off the map
 	REQUIRE( nb.eval_move(NE_HORSE, off_map_horse) == false );
-
 }
 
 
