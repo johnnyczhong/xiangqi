@@ -74,6 +74,7 @@ class Board
     bool elephant_move(int, int);
     bool guard_move(int, int);
     bool general_move(int, int);
+    bool obstructed_generals(int);
 
   	//call from eval_move if general is threatened
   	//flips north_check or south_check from false to true and vice versa

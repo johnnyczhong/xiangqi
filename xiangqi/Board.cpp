@@ -79,6 +79,8 @@ bool Board::general_move(int i, int f)
 {
   int movement = f - i;
   int general = ia_grid[i];
+
+  bool not_gvg = obstructed_generals(f);
   bool in_boundary = false;
   bool valid = 
   (
@@ -95,7 +97,25 @@ bool Board::general_move(int i, int f)
     in_boundary = s_camp_box_check(f);
   }
 
-  return (in_boundary && valid);
+  return (in_boundary && valid && not_gvg);
+}
+
+
+//determines if the position the general
+//is moving to will initiate a "check" status
+bool Board::obstructed_generals(int f)
+{
+  int e_pos;
+  if (b_north_turn) //north's turn
+  {
+    e_pos = get_general_pos(-1);
+  }
+  else
+  {
+    e_pos = get_general_pos(1);
+  }
+
+  return !(straight_collision_check(f, e_pos));
 }
 
 bool Board::guard_move(int i, int f)
