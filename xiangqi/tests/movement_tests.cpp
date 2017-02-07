@@ -382,6 +382,7 @@ TEST_CASE( "General Movement Tests", "general_move" )
 	nb.make_piece(general_pos, GENERAL); //spawn at the border
 	REQUIRE( nb.general_move(general_pos, general_pos + DOWN) == false ); //attempt to move out
 
+  /*
   // === GENERALS CANNOT CHECK THEMSELVES START ===
 
   //generals cannot have an unbostructed path towards each other
@@ -427,10 +428,18 @@ TEST_CASE( "General Movement Tests", "general_move" )
   REQUIRE( nb.general_move(general_pos, general_pos + UP) == true );
 
   // === GENERALS CANNOT CHECK THEMSELVES FINISH ===
+  */
 
 }
-/*
-TEST_CASE( "General Check Status", "determine_threat" )
+
+//might be better to load this onto the post-move check
+//allow player to attempt any move
+//run a check after the move is declared
+//  and invalidate the move if it's declared illegal.
+//technically any move could put the general into the "check" status,
+//  so all moves must be checked
+
+TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
 {
   Board nb;
 
@@ -513,8 +522,6 @@ TEST_CASE( "General Check Status", "determine_threat" )
 
   // === END PAWN TEST ===
 }
-
-*/
 
 TEST_CASE( "Movement Validation", "eval_move" )
 {
