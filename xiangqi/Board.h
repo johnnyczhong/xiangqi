@@ -9,6 +9,7 @@ class Board
 {
   private:
   	bool b_north_turn = true; //north starts first
+    int turn = 1; //north: 1, south: -1
   	bool b_north_check = false;
   	bool b_south_check = false;
     int i_north_general_pos = N_GENERAL;
@@ -43,16 +44,19 @@ class Board
   	//TODO:
   	//start game
   	//turn_start
-  	//determine is "in check" - adds more checks to validate moves
-		//prompt player specify intial position
-  	//	determine if is valid, goto turn_start if not
-  	//prompt player specify final position
-  	//	determine if is valid: goto turn_start if not
-  	//if "in check", determine if move would remove check condition
-  	//	if not, goto turn_start
-  	//execute move
-  	//determine ramifications (flip check status, remove pieces from board, etc.)
-  	//next player turn
+  		//prompt player specify intial position
+    	//	determine if is valid, goto turn_start if not
+    	//prompt player specify final position
+    	//	determine if is valid: goto turn_start if not
+      //if current player is attempting to finish move in-check, goto turn_start
+      //  being in-check doesn't matter, ending turn in-check matters
+    	//execute move
+    	//determine ramifications (evaluate check, remove pieces from board, etc.)
+      //if this move would put the opposing player in-check,
+      // determine if there would be a valid move that would allow the opposing player to
+      // escape the check. if not, then declare checkmate
+      // valid moves: move general, remove threatening piece, block threatening piece
+    	//next player turn
     
   	int determine_position(int, int); //given set of x, y find corresponding array position
     	
@@ -80,7 +84,8 @@ class Board
 
   	//call from eval_move if general is threatened
   	//flips north_check or south_check from false to true and vice versa
-  	void get_in_check(); 
+  	bool get_in_check();
+    void set_in_check();
 
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position

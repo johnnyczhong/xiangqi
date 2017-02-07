@@ -6,16 +6,27 @@
 
 #define DEBUG 1
 
-void Board::flip_turn()
+bool Board::get_in_check()
 {
-  if (b_north_turn)
+  if (turn)
   {
-    b_north_turn = false;
+    return b_north_check;
   }
   else
   {
-    b_north_turn = true;
+    return b_south_check;
   }
+}
+
+//can only set check 
+void Board::set_in_check()
+{
+
+}
+
+void Board::flip_turn()
+{
+  turn *= -1; 
 }
 
 int Board::get_general_pos(int side)
@@ -32,11 +43,11 @@ int Board::get_general_pos(int side)
 
 void Board::update_general_pos(int pos)
 {
-  if (b_north_turn) //north
+  if (turn)//north
   {
     i_north_general_pos = pos;
   }
-  else if (!b_north_turn) //south
+  else //south
   {
     i_south_general_pos = pos;
   }
@@ -110,6 +121,9 @@ bool Board::general_move(int i, int f)
     in_boundary = s_camp_box_check(f);
   }
 
+  if (DEBUG)
+    std::cout << in_boundary << valid << not_gvg << std::endl;
+
   return (in_boundary && valid && not_gvg);
 }
 
@@ -118,7 +132,7 @@ bool Board::general_move(int i, int f)
 bool Board::obstructed_generals(int f)
 {
   int e_pos;
-  if (b_north_turn) //north's turn
+  if (turn) //north's turn
   {
     e_pos = get_general_pos(-1); //get south general position
   }
@@ -130,7 +144,9 @@ bool Board::obstructed_generals(int f)
   //if there is a collision (before hitting the other general)
   //or if the path is not straight, return true
   int collision = straight_collision_check(f, e_pos);
-  std::cout << "f, e_pos: " << f << " " << e_pos << std::endl;
+
+  if (DEBUG)
+    std::cout << "f, e_pos: " << f << " " << e_pos << std::endl;
   return (collision != 0);
 }
 
