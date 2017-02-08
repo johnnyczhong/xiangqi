@@ -1,5 +1,6 @@
 //board.h
 //header file
+#include <map>
 #include "Board_Defaults.h"
 
 #ifndef BOARD_H
@@ -10,10 +11,16 @@ class Board
   private:
   	bool b_north_turn = true; //north starts first
     int turn = 1; //north: 1, south: -1
-  	bool b_north_check = false;
-  	bool b_south_check = false;
-    int i_north_general_pos = N_GENERAL;
-    int i_south_general_pos = S_GENERAL;
+
+    std::map<int, bool> m_in_check =
+    {
+      {1, false}, {-1, false}
+    };
+
+    std::map<int, int> m_general_pos = 
+    {
+      {1, N_GENERAL}, {-1, S_GENERAL}
+    };
   
   	// starting board
     //computer-view of board 14 (L) by 13 (W)
@@ -84,12 +91,14 @@ class Board
 
   	//call from eval_move if general is threatened
   	//flips north_check or south_check from false to true and vice versa
-  	bool get_in_check();
+  	bool get_in_check(int);
     void set_in_check();
+      bool evaluate_threat(int, int);
+      bool pawn_threat(int, int);
 
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position
-    void update_general_pos(int);
+    void update_general_pos(int, int);
     void flip_turn(); //change turn from N to S and vice versa
     int get_general_pos(int);
 
