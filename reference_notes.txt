@@ -7,9 +7,32 @@ reference: https://chessprogramming.wikispaces.com/10x12+Board
  4: elephant. N: 30, 34. S: 147, 151
  5: horse. N: 29, 35. S: 146, 152
  6: cart. N: 28, 36. S: 145, 153
- 7: guards. N: 31, 33. S: 148, 150.
+ 7: guard. N: 31, 33. S: 148, 150.
  8: general. N: 32. S: 149.
 
+
+-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //12
+-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //25
+-1, -1,  6,  5,  4,  7,  8,  7,  4,  5,  6, -1, -1, //38
+-1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, //51
+-1, -1,  0,  3,  0,  0,  0,  0,  0,  3,  0, -1, -1, //64
+-1, -1,  2,  0,  2,  0,  2,  0,  2,  0,  2, -1, -1, //77
+-1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, //riverbank 90
+-1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, //riverbank 103
+-1, -1, -2,  0, -2,  0, -2,  0, -2,  0, -2, -1, -1, //116
+-1, -1,  0, -3,  0,  0,  0,  0,  0, -3,  0, -1, -1, //129
+-1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, //142
+-1, -1, -6, -5, -4, -7, -8, -7, -4, -5, -6, -1, -1, //155
+-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //168
+-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  //181
+
+origin = top-left corner of board
+x-shift % 13 gives x-offset from origin (ia_grid[27])
+  top board x-intercept = 15 + x-offset
+  bottom board x-intercept = 158 + x-offset
+y-shift / 13 gives y-offset from origin (ia_grid[27])
+  left board y-intercept = 27 + (y-offset * 13)
+  right board y-intercept = 37 + (y-offset * 13)
 
 player-view of board (x, y) coordinate system
 
