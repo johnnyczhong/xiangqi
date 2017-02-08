@@ -6,22 +6,52 @@
 
 #define DEBUG 1
 
-bool Board::get_in_check()
+bool Board::get_in_check(int g)
 {
-  if (turn)
-  {
-    return b_north_check;
-  }
-  else
-  {
-    return b_south_check;
-  }
+  return (m_in_check[g]);
 }
 
-//can only set check 
+//end of turn declaration
+//determines if the move declared would 
+//  put the current player in check (self-check)
+//  and if the opponent would be in check
+//  if the opponent would be in check, looks for
+//    valid moves or ways to leave check.
+//    if none are found, declare checkmate
+
+//generals are in check if under threat
+//determine threat by making mock attacks against other pieces
+//if mock attack results in finding a piece that could make an identical
+//  attack, then the general is under threat (in-check)
 void Board::set_in_check()
 {
+  m_in_check[NORTH] = evaluate_threat(m_general_pos[NORTH], NORTH);
+  m_in_check[SOUTH] = evaluate_threat(m_general_pos[SOUTH], SOUTH);
+}
 
+bool Board::evaluate_threat(int gen_pos, int player)
+{
+  //make mock attacks against opposing pieces using the gen_pos
+  //  as origin point
+  return (pawn_threat(gen_pos, player));
+}
+
+bool Board::pawn_threat(int gen_pos, int player)
+{
+  bool pawn_threat = false;
+  int forward = player * DOWN; //forward relative to general/player perspective
+  int pawn_threat_pos[] = {LEFT, RIGHT, forward};
+  int n = sizeof(pawn_threat_pos)/sizeof(int);
+  for (int i = 0; i < n; i++)
+  {
+    if (ia_grid[gen_pos + i] == (player * -PAWN))
+    {
+      pawn_threat = true;
+      break;
+    }
+  }
+
+  return pawn_threat;
 }
 
 void Board::flip_turn()
@@ -29,28 +59,14 @@ void Board::flip_turn()
   turn *= -1; 
 }
 
-int Board::get_general_pos(int side)
+int Board::get_general_pos(int player)
 {
-  if (side > 0) //north
-  {
-    return i_north_general_pos;
-  }
-  else //south
-  {
-    return i_south_general_pos;
-  }
+  return m_general_pos[player];
 }
 
-void Board::update_general_pos(int pos)
+void Board::update_general_pos(int player, int pos)
 {
-  if (turn)//north
-  {
-    i_north_general_pos = pos;
-  }
-  else //south
-  {
-    i_south_general_pos = pos;
-  }
+  m_general_pos[player] = pos;
 }
 
 bool Board::eval_dest(int i, int f)
