@@ -11,6 +11,10 @@
 #define GUARD 7
 #define GENERAL 8
 
+//players
+#define NORTH 1
+#define SOUTH -1
+
 //directions
 #define UP -13
 #define DOWN 13
