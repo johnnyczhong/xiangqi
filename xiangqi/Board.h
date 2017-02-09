@@ -100,7 +100,8 @@ class Board
     void set_in_check();
       bool evaluate_threat(int, int);
       bool pawn_threat(int, int);
-      bool cart_threat(int, int);
+      bool straight_path_threat(int, int);
+      bool horse_threat(int, int);
 
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position

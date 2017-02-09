@@ -33,13 +33,14 @@ bool Board::evaluate_threat(int gen_pos, int player)
 {
   //make mock attacks against opposing pieces using the gen_pos
   //  as origin point
-  return (pawn_threat(gen_pos, player) || cart_threat(gen_pos, player));
+  return (pawn_threat(gen_pos, player) || straight_path_threat(gen_pos, player));
 }
 
-bool Board::cart_threat(int gen_pos, int player)
+//checks for cart and cannon threats
+bool Board::straight_path_threat(int gen_pos, int player)
 {
   bool cart_threat = false;
-  //get collision in all directions to edge of board 
+  bool cannon_threat = false;
 
   int offset = gen_pos - ORIGIN; //calculate relative position from top-left corner
   int x_offset = offset % DOWN; //how far to the right
@@ -49,21 +50,34 @@ bool Board::cart_threat(int gen_pos, int player)
   int north_limit = ORIGIN_NORTH + x_offset;
   int south_limit = ORIGIN_SOUTH + x_offset;
   int four_directions[] = {west_limit, east_limit, north_limit, south_limit};
+  int n = sizeof(four_directions)/sizeof(int);
 
-  char f[] = {'w', 'e', 'n', 's'};
+  int collided_position;
+  int next_collision;
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < n; i++)
   {
-    if (DEBUG)
-      std::cout << f[i] << ": " << four_directions[i] << std::endl;
-    if (ia_grid[straight_collision_check(gen_pos, four_directions[i])] == (player * -CART))
+    collided_position = straight_collision_check(gen_pos, four_directions[i]);
+
+    if (ia_grid[collided_position] == (player * -CART))
     {
+      //carts represent immediate threat
       cart_threat = true;
       break;
     }
+    else if (ia_grid[collided_position] != 0)
+    {
+      //cannons need something to jump over
+      next_collision = straight_collision_check(collided_position, four_directions[i]);
+      if (ia_grid[next_collision] == -CANNON)
+      {
+        cannon_threat = true;
+        break;
+      }
+    }
   }
 
-  return cart_threat;
+  return (cart_threat || cannon_threat);
 }
 
 bool Board::pawn_threat(int gen_pos, int player)

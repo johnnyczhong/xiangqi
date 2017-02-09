@@ -1,8 +1,6 @@
 #include "catch.hpp"
 #include "xiangqi/Board.cpp"
 
-#include <iostream>
-
 TEST_CASE( "Make and Remove Pieces", "make_piece remove_piece" )
 {
 	Board nb;
@@ -461,32 +459,41 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
   // === BEGIN CANNON TEST ===
 
   //spawn enemy cannon in front of central pawn
-  nb.make_piece(n_pawn_pos[2] + DOWN, -CANNON);
+  int ec = n_pawn_pos[2] + DOWN;
+  nb.make_piece(ec, -CANNON);
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == true );
-  nb.remove_piece(n_pawn_pos[2] + DOWN);
+  nb.remove_piece(ec);
 
   //recheck check status
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false );
 
   // === END CANNON TEST === 
+
 
   // === START HORSE TEST ===
 
   //spawn enemy horse in threat position
   int h = n + 2*LEFT + DOWN;
   nb.make_piece(h, -HORSE);
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == true );
 
   //block enemy horse with allied pawn
   int p = h + RIGHT;
   nb.make_piece(p, PAWN);
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false );
 
-  //remove allied pawn and enemy horse
+  //remove enemy horse
   nb.remove_piece(h);
-  nb.remove_piece(p);
+  nb.set_in_check();
+  REQUIRE( nb.get_in_check(NORTH) == false);
 
-  //recheck check status
+  //remove pawn
+  nb.remove_piece(p);
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false);
 
   // === END HORSE TEST ===
