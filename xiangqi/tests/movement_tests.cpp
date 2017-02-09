@@ -403,8 +403,9 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
   //  make an unobstructed mock attack in all directions
   //  if there's a horse there, then determine if the horse could make a valid attack
 
-  //north, starting positions
+  //starting positions
   REQUIRE( nb.get_in_check(NORTH) == false );
+  REQUIRE( nb.get_in_check(SOUTH) == false );
 
   //move general forward/down 1 space
   int n = nb.get_general_pos(1);
@@ -414,6 +415,7 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
   n = nb.get_general_pos(NORTH);
   nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false );
+  
 
   // === START PAWN TEST ===
 
@@ -422,6 +424,7 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
   nb.make_piece(ep, -PAWN);
   nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == true );
+  REQUIRE( nb.get_in_check(SOUTH) == false );
 
   //remove enemy pawn, recheck
   nb.remove_piece(ep);
@@ -434,12 +437,23 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
 
   //spawn enemy cart/rook left-horizontal of the general's position
   nb.make_piece(n + 3*LEFT, -CART);
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == true );
   //remove cart
   nb.remove_piece(n + 3*LEFT);
 
+  //spawn enemy cart/rook north of south general position
+  int nc = S_GENERAL + 2*UP;
+  nb.make_piece(nc, CART);
+
   //recheck check status
+  nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false );
+  REQUIRE( nb.get_in_check(SOUTH) == true ); 
+
+  nb.remove_piece(nc);
+  nb.set_in_check();
+  REQUIRE( nb.get_in_check(SOUTH) == false );
 
   // === END CART TEST ===
 
