@@ -520,8 +520,31 @@ TEST_CASE( "Piece movement", "move_piece" )
 
   //make sure the old position is now empty
   REQUIRE( (b.check_pos(NE_CART) == UNOCCUPIED) == true );
+}
+
+TEST_CASE( "General vs General", "general_threat" )
+{
+  Board b;
+
+  //moving generals into a threatening position
+  b.move_piece(S_GENERAL, S_GENERAL + UP + RIGHT);
+  b.move_piece(N_GENERAL, N_GENERAL + DOWN + RIGHT);
+
+  //both generals should be in check
+  b.set_in_check();
+  REQUIRE( b.get_in_check(NORTH) == true );
+  REQUIRE( b.get_in_check(SOUTH) == true );
+
+  //introduce a blocking piece
+  b.move_piece(SW_GUARD, SW_GUARD + 2*UP + 2*RIGHT);
+
+  //confirm that the generals are no longer in check
+  b.set_in_check();
+  REQUIRE( b.get_in_check(NORTH) == false );
+  REQUIRE( b.get_in_check(SOUTH) == false );
 
 }
+
 
 TEST_CASE( "Movement Validation", "eval_move" )
 {
