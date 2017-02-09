@@ -1,0 +1,122 @@
+Overall Documentation
+
+Piece Logic
+===========
+
+Overall Rules:
+	These rules apply to all pieces.
+	1. Pieces cannot occupy the same space as an allied piece.
+	2. Pieces cannot move off the board.
+
+Pawn: Can only move forward 1 space unless it's crossed the river.
+	Once it's crossed, can move 1 space forward, left, or right.
+
+	Implementation: Fairly easy to implement.
+		If the pawn is a NORTH (team 1) pawn and hasn't crossed the river (array[90]),
+		then it can only move DOWN (+13 positions).
+		Once it's moved across the river, attempts to move 1 space left (-1) or 1 space right (+1) are allowed.
+
+
+Straight-line Pieces:
+
+	Given an initial and a final position, determine if there is a piece between them.
+
+	Cannon: Moves like the cart/rook but can only attack by leapfrogging over and
+		onto an enemy piece horizontally or vertically.
+		C = Cannon
+		B = Board
+		E = Enemy
+		C ---> B ---> E is a valid move
+		Board can be enemy or ally. Distance between the 3 pieces is irrelevant.
+
+	In the case of the Cannon, the straight line rule affects movement and attack differently.
+	So long as there is not a piece between the Cannon's initial and final position, it
+	is a valid move. If the destination (final position) is an enemy piece and
+	there is 1 piece between the initial and final positions, this would be an attack
+	and would be found valid.
+
+	Cart: Analogous to the rook in western or international Chess.
+		Can move any number of spaces horizontally and vertically.
+		Attacks an enemy piece by moving into the space.
+
+	The Cart movement is simpler, as the attack and move actions are identical except
+	that for attacks the final position is on an enemy piece.
+
+Elephant: Can only move 2 spaces diagonally. Cannot cross the river. 
+	If there is a piece in the diagonal between the initial and final position,
+	that blocks the movement by the Elephant.
+
+	This is accomplished by simply finding the position from the initial position, adding
+	2 horizontal movement and 2 vertical movement to validate the final position.
+	To detect a blocked movement, determine if the space 1 horizontal and 1 vertical
+	is empty. If it's not empty, then the move is blocked.
+
+	In the following example, Elephant is able to move or attack X, given that X is either 
+	an empty space or enemy piece.
+
+		          _ _X
+		VALID    |_|_|    VALID
+			 E_|_|
+
+	If the same diagram would be used, but a blocker (B) is introduced, it is no longer a
+	valid move.
+
+	        	  _ _X   
+		INVALID  |_B_|   INVALID
+		         E_|_|
+
+Horse: Moves 2 spaces in 1 direction, then 1 space perpindicular to that.
+	If the reader is familiar with the Knight piece, the Horse moves the same way.
+	The only exception is a block mechanic similar to that of the Elephant.
+	A Horse's movement can be blocked by another piece that occupies a space 
+	adjacent to it in the 2-direction. An extended explanation is provided below.
+
+	In any given position, the maximum number of new spaces the Horse could occupy is 8.
+	This can be broken up to 4 directions: UP, DOWN, LEFT, RIGHT.
+	The can be listed out as: 
+		UP-UP-RIGHT, UP-UP-LEFT
+		DOWN-DOWN-RIGHT, DOWN-DOWN-LEFT
+		etc.
+
+	If there is a piece that blocks the first UP, DOWN, LEFT, or RIGHT, 
+	that move is illegal.
+
+	For example:
+
+		|_|_X	where H is moving to X is legal because there is nothing 
+		H_|_|   inhibiting the first movement to the RIGHT.
+
+		|_|_X   would be illegal, because H must move twice to the right
+		H_P_|   before moving up. The piece P is blocking this movement.
+
+		|_Y_|   H to X is legal here because the first RIGHT is not being blocked.
+		A_B_X	H to Y is illegal here because the first UP is blocked by piece A.
+		H_|_C	If X were an enemy Horse, it could not attack H even if H could attack X.
+
+
+Camp/Box Pieces:
+	These pieces can only move within the confines of the camp/box.
+
+	Guard: Moves 1 space diagonally in the box. 
+
+		The diagonal movement is simply 1 horizontal followed by 1 vertical and 
+		confirming that the difference between the initial and final positions is
+		one of the following: 
+			UP + LEFT or UP + RIGHT or DOWN + LEFT or DOWN + RIGHT
+
+	General: Moves 1 space horizontally or vertically in the box.
+
+		UP, DOWN, LEFT, or RIGHT are fixed values between the initial and final positions.
+
+	The restriction placed on these pieces is that their final position must be
+	placed within the box.
+
+
+
+
+
+
+
+
+
+
