@@ -105,6 +105,7 @@ class Board
 
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position
+    void move_piece(int, int); //initial, final positions
     void update_general_pos(int, int);
     void flip_turn(); //change turn from N to S and vice versa
     int get_general_pos(int);

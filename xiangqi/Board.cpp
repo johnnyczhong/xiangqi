@@ -522,6 +522,13 @@ void Board::remove_piece(int pos)
   ia_grid[pos] = 0;
 }
 
+void Board::move_piece(int i, int f)
+{
+  int p = check_pos(i);
+  make_piece(f, p);
+  remove_piece(i);
+}
+
 int Board::check_pos(int pos)
 {
   return ia_grid[pos];

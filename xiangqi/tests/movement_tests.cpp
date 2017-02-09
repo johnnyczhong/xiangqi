@@ -505,6 +505,24 @@ TEST_CASE ( "Horse Threat Test", "horse_threat" )
   // === END HORSE TEST ===
 }
 
+TEST_CASE( "Piece movement", "move_piece" )
+{
+  Board b;
+
+  //confirm cart is in correct location
+  REQUIRE( (b.check_pos(NE_CART) == CART) == true );
+
+  //move cart DOWN 2 spaces
+  b.move_piece(NE_CART, NE_CART + 2*DOWN);
+
+  //make sure the cart is in the correct position
+  REQUIRE( (b.check_pos(NE_CART + 2*DOWN) == CART) == true );
+
+  //make sure the old position is now empty
+  REQUIRE( (b.check_pos(NE_CART) == UNOCCUPIED) == true );
+
+}
+
 TEST_CASE( "Movement Validation", "eval_move" )
 {
 	Board nb;
