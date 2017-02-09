@@ -50,6 +50,12 @@
 #define N_GENERAL 32
 #define S_GENERAL 149
 
+#define ORIGIN 28
+#define ORIGIN_NORTH 15
+#define ORIGIN_SOUTH 158
+#define ORIGIN_WEST 27
+#define ORIGIN_EAST 37
+
 //left to right designations
 int n_pawn_pos[] = {67, 69, 71, 73, 75};
 int s_pawn_pos[] = {106, 108, 110, 112, 114};
