@@ -56,14 +56,14 @@ Elephant: Can only move 2 spaces diagonally. Cannot cross the river.
 
 		          _ _X
 		VALID    |_|_|    VALID
-			     E_|_|
+			 E_|_|
 
 	If the same diagram would be used, but a blocker (B) is introduced, it is no longer a
 	valid move.
 
 	        	  _ _X   
 		INVALID  |_B_|   INVALID
-				 E_|_|
+		         E_|_|
 
 Horse: Moves 2 spaces in 1 direction, then 1 space perpindicular to that.
 	If the reader is familiar with the Knight piece, the Horse moves the same way.
