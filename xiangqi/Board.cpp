@@ -33,7 +33,37 @@ bool Board::evaluate_threat(int gen_pos, int player)
 {
   //make mock attacks against opposing pieces using the gen_pos
   //  as origin point
-  return (pawn_threat(gen_pos, player));
+  return (pawn_threat(gen_pos, player) || cart_threat(gen_pos, player));
+}
+
+bool Board::cart_threat(int gen_pos, int player)
+{
+  bool cart_threat = false;
+  //get collision in all directions to edge of board 
+
+  int offset = gen_pos - ORIGIN; //calculate relative position from top-left corner
+  int x_offset = offset % DOWN; //how far to the right
+  int y_offset = offset / DOWN; //how far down
+  int west_limit = ORIGIN_WEST + (y_offset * DOWN);
+  int east_limit = ORIGIN_EAST + (y_offset * DOWN);
+  int north_limit = ORIGIN_NORTH + x_offset;
+  int south_limit = ORIGIN_SOUTH + x_offset;
+  int four_directions[] = {west_limit, east_limit, north_limit, south_limit};
+
+  char f[] = {'w', 'e', 'n', 's'};
+
+  for (int i = 0; i < 4; i++)
+  {
+    if (DEBUG)
+      std::cout << f[i] << ": " << four_directions[i] << std::endl;
+    if (ia_grid[straight_collision_check(gen_pos, four_directions[i])] == (player * -CART))
+    {
+      cart_threat = true;
+      break;
+    }
+  }
+
+  return cart_threat;
 }
 
 bool Board::pawn_threat(int gen_pos, int player)

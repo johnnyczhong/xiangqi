@@ -21,6 +21,11 @@ class Board
     {
       {1, N_GENERAL}, {-1, S_GENERAL}
     };
+
+    // std::map<int, int> m_camp_center =
+    // {
+    //   {1, NORTH_CAMP_CENTER}, {-1, SOUTH_CAMP_CENTER}
+    // };
   
   	// starting board
     //computer-view of board 14 (L) by 13 (W)
@@ -95,6 +100,7 @@ class Board
     void set_in_check();
       bool evaluate_threat(int, int);
       bool pawn_threat(int, int);
+      bool cart_threat(int, int);
 
     void make_piece(int, int); //position, piece id
     void remove_piece(int); //position
