@@ -33,7 +33,53 @@ bool Board::evaluate_threat(int gen_pos, int player)
 {
   //make mock attacks against opposing pieces using the gen_pos
   //  as origin point
-  return (pawn_threat(gen_pos, player) || straight_path_threat(gen_pos, player));
+  return (pawn_threat(gen_pos, player) || 
+    straight_path_threat(gen_pos, player) || 
+    horse_threat(gen_pos, player));
+}
+
+bool Board::horse_threat(int gen_pos, int player)
+{
+  //make mock attacks in the horse pattern
+  // find possible threat, determine if it's blocked.
+  //if the space 1 diagonal away is not empty (0),
+  //  then the threat from the horse is blocked
+  //starting from top-left, running clockwise
+  bool horse_threat = false;
+  int enemy_horse = player * -HORSE;
+
+  int blockers[] = {UP+LEFT, UP+RIGHT, DOWN+RIGHT, DOWN+LEFT};
+  int horse_attack_vectors[] = 
+  {
+    (2*LEFT + UP), (2*UP + LEFT), // blockers[0]
+    (2*UP + RIGHT), (2*RIGHT + UP), // blockers[1]
+    (2*RIGHT + DOWN), (2*DOWN + RIGHT), // blockers[2]
+    (2*DOWN + LEFT), (2*LEFT + DOWN) // blockers[3]
+  };
+
+  int n = sizeof(blockers)/sizeof(int);
+  int blocker_check;
+  int horse_pos0;
+  int horse_pos1;
+
+  for (int i = 0; i < n; i++)
+  {
+    blocker_check = gen_pos + blockers[i];
+    if (ia_grid[abs(blocker_check)] == UNOCCUPIED) // no blocker
+    {
+      horse_pos0 = horse_attack_vectors[2*i] + gen_pos;
+      horse_pos1 = horse_attack_vectors[(2*i) + 1] + gen_pos;
+      if (ia_grid[horse_pos0] == enemy_horse 
+        || ia_grid[horse_pos1] == enemy_horse) 
+        //determine if there's a horse in the threat spots
+      {
+        horse_threat = true;
+        break;
+      }
+    }
+  }
+
+  return (horse_threat);
 }
 
 //checks for cart and cannon threats
@@ -69,7 +115,7 @@ bool Board::straight_path_threat(int gen_pos, int player)
     {
       //cannons need something to jump over
       next_collision = straight_collision_check(collided_position, four_directions[i]);
-      if (ia_grid[next_collision] == -CANNON)
+      if (ia_grid[next_collision] == (player * -CANNON))
       {
         cannon_threat = true;
         break;
