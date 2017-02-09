@@ -470,18 +470,24 @@ TEST_CASE( "General Check Status", "set_in_check and get_in_check" )
   REQUIRE( nb.get_in_check(NORTH) == false );
 
   // === END CANNON TEST === 
+}
 
+
+TEST_CASE ( "Horse Threat Test", "horse_threat" )
+{
+
+  Board nb;
 
   // === START HORSE TEST ===
 
   //spawn enemy horse in threat position
-  int h = n + 2*LEFT + DOWN;
+  int h = nb.get_general_pos(NORTH) + 2*DOWN + RIGHT;
   nb.make_piece(h, -HORSE);
   nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == true );
 
   //block enemy horse with allied pawn
-  int p = h + RIGHT;
+  int p = h + UP;
   nb.make_piece(p, PAWN);
   nb.set_in_check();
   REQUIRE( nb.get_in_check(NORTH) == false );
