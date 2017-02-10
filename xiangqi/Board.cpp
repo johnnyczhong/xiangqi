@@ -6,6 +6,8 @@
 
 #define DEBUG 1
 
+
+
 bool Board::get_in_check(int g)
 {
   return (m_in_check[g]);
@@ -35,7 +37,28 @@ bool Board::evaluate_threat(int gen_pos, int player)
   //  as origin point
   return (pawn_threat(gen_pos, player) || 
     straight_path_threat(gen_pos, player) || 
-    horse_threat(gen_pos, player));
+    horse_threat(gen_pos, player) ||
+    general_threat(gen_pos, player));
+}
+
+bool Board::general_threat(int gen_pos, int player)
+{
+  int x_offset = (gen_pos - ORIGIN) % DOWN;
+  bool general_threat = false;
+
+  if (player == 1) //NORTH
+  {
+    general_threat = 
+      (ia_grid[straight_collision_check(gen_pos, ORIGIN_SOUTH + x_offset)] 
+        == -GENERAL);
+  }
+  else
+  {
+    general_threat = 
+      (ia_grid[straight_collision_check(gen_pos, ORIGIN_NORTH + x_offset)] 
+        == GENERAL);    
+  }
+  return general_threat;
 }
 
 bool Board::horse_threat(int gen_pos, int player)
@@ -227,9 +250,6 @@ bool Board::general_move(int i, int f)
     in_boundary = s_camp_box_check(f);
   }
 
-  if (DEBUG)
-    std::cout << in_boundary << valid << not_gvg << std::endl;
-
   return (in_boundary && valid && not_gvg);
 }
 
@@ -251,8 +271,6 @@ bool Board::obstructed_generals(int f)
   //or if the path is not straight, return true
   int collision = straight_collision_check(f, e_pos);
 
-  if (DEBUG)
-    std::cout << "f, e_pos: " << f << " " << e_pos << std::endl;
   return (collision != 0);
 }
 
@@ -527,6 +545,12 @@ void Board::move_piece(int i, int f)
   int p = check_pos(i);
   make_piece(f, p);
   remove_piece(i);
+
+  if (abs(p) == GENERAL)
+  {
+    int player = p/GENERAL;
+    update_general_pos(player, f);
+  }
 }
 
 int Board::check_pos(int pos)

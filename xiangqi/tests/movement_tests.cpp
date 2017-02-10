@@ -526,6 +526,11 @@ TEST_CASE( "General vs General", "general_threat" )
 {
   Board b;
 
+  //confirm that the generals are not currently in check
+  b.set_in_check();
+  REQUIRE( b.get_in_check(NORTH) == false );
+  REQUIRE( b.get_in_check(SOUTH) == false );
+
   //moving generals into a threatening position
   b.move_piece(S_GENERAL, S_GENERAL + UP + RIGHT);
   b.move_piece(N_GENERAL, N_GENERAL + DOWN + RIGHT);
